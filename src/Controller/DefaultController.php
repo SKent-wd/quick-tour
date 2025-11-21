@@ -2,6 +2,8 @@
 // src/Controller/DefaultController.php
 namespace App\Controller;
 
+use App\GreetingGenerator;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,10 +11,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class DefaultController extends AbstractController
 {
     #[Route('/hello/{name}', name: 'index')]
-    public function index(string $name): Response
+    public function index(string $name, LoggerInterface $logger, GreetingGenerator $generator): Response
     {
+		$greeting = $generator->getRandomGreeting();
+		
+		$logger->info("Saying $greeting to $name!");
         return $this->render('default/index.html.twig', [
-			'name' => $name,
+			'name' => $name
 		]);
     }
 	
